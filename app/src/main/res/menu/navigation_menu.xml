@@ -8,11 +8,11 @@
     <item
         android:id="@+id/Walk"
         android:icon="@drawable/bt_icon_step"
-        android:title="Message" />
+        android:title="FootstepCounter" />
     <item
         android:id="@+id/Note"
-        android:icon="@drawable/bt_icon_step"
-        android:title="Setting"/>
+        android:icon="@drawable/bt_icon_note"
+        android:title="Spending Record"/>
 
 </menu>
 
