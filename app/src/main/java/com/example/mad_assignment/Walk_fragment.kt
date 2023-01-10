@@ -1,59 +1,85 @@
 package com.example.mad_assignment
 
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Walk_fragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class Walk_fragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+class Walk_fragment : Fragment(), SensorEventListener {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    private var sensorManager: SensorManager?=null
+
+    private var running = false
+    private var totalSteps = 0f
+    private var preTotalSteps = 0f
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        return inflater.inflate(R.layout.fragment_walk_fragment,container,false)
+
+        sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        //from https://stackoverflow.com/questions/24427414/getsystemservices-is-undefined-when-called-in-a-fragment//
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        running = true
+        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+
+        if(stepSensor == null){
+            Toast.makeText(activity,"Cannot detect sensor for this device.", Toast.LENGTH_SHORT).show()
+        }else{
+            sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_walk_fragment, container, false)
-    }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Walk_fragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Walk_fragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onSensorChanged(event: SensorEvent?) {
+
+
+        var tv_stepsTaken: TextView = view.findViewByID(R.id.tv_step) as TextView
+
+        if (running) {
+                totalSteps = event!!.values[0]
+
+
+                // Current steps are calculated by taking the difference of total steps
+                // and previous steps
+                val currentSteps = totalSteps.toInt() - preTotalSteps.toInt()
+
+
+
+                // It will show the current steps to the user
+            tv_stepsTaken.text = "$currentSteps"
             }
     }
+
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
+    }
+}
+
+private fun View?.findViewByID(tvStep: Int) {
+
+}
+
+
+private fun LayoutInflater.inflate(fragmentWalkFragment: Int) {
+
 }

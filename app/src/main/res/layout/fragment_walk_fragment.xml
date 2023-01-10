@@ -31,15 +31,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/Footstep"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:id="@+id/tv_step"
+            android:layout_width="182dp"
+            android:layout_height="73dp"
             android:layout_marginStart="140dp"
-            android:layout_marginTop="328dp"
+            android:layout_marginTop="316dp"
             android:layout_marginEnd="130dp"
             android:text="SampleText"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.634"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -51,7 +51,7 @@
             android:layout_marginTop="184dp"
             android:text="Update"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Footstep" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_step" />
 
         <Button
             android:id="@+id/Walk_Reset"
@@ -61,7 +61,7 @@
             android:layout_marginEnd="72dp"
             android:text="Clear"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/Footstep" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_step" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
 
