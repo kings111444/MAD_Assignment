@@ -62,7 +62,6 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     private fun readData() {
 
         lateinit var stepcount : StepCount
-        var step_text = binding.etStep.text
         var date_text = binding.tvDate.text
 
         GlobalScope.launch {
@@ -85,21 +84,17 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
         if(step_text.isNotEmpty()) {
-            lateinit var stepcount : StepCount
-            Log.d("step?", step_text.toString())
-            Log.d("date", date_text.toString())
-            stepcount = appDb.stepcountDao().findbydate(date_text as String)
-
             val stepdata = StepCount(
                 null,step_text.toString(), date_text.toString()
             )
             GlobalScope.launch(Dispatchers.IO) {
 
-                if(stepcount.toString() == (date_text.toString())){
+                /*if(stepcount.toString() == (date_text.toString())){
                     appDb.stepcountDao().update(step_text.toString(), date_text.toString())
-                }
+                }*/
 
                 appDb.stepcountDao().insert(stepdata)
+                appDb.stepcountDao().update(step_text.toString(), date_text.toString())
             }
 
 
