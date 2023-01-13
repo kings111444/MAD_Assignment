@@ -1,44 +1,57 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
     <EditText
-        android:id="@+id/stepcurrent"
+        android:id="@+id/etStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="0"
+        android:inputType="number"
         android:textSize="40sp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <Button
-        android:id="@+id/btn_insert_data"
+        android:id="@+id/btnInsertData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stepcurrent"
+        android:layout_below="@+id/etStep"
         android:layout_marginTop="137dp"
         android:layout_marginEnd="55dp"
-        android:layout_toStartOf="@+id/stepcurrent"
+        android:layout_toStartOf="@+id/etStep"
         android:text="Save" />
 
     <Button
-        android:id="@+id/btn_view_data"
+        android:id="@+id/btnViewData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/stepcurrent"
+        android:layout_below="@+id/etStep"
         android:layout_marginStart="55dp"
         android:layout_marginTop="137dp"
-        android:layout_toEndOf="@+id/stepcurrent"
+        android:layout_toEndOf="@+id/etStep"
         android:text="View" />
 
     <TextView
-        android:id="@+id/tv_step"
-        android:layout_width="102dp"
-        android:layout_height="93dp"
-        android:text="TextView" />
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:id="@+id/tv_showrecord"
+        android:layout_width="111dp"
+        android:layout_height="38dp"
+        android:layout_alignEnd="@+id/tv_date"
+        android:layout_alignBottom="@+id/tv_date"
+        android:layout_marginEnd="158dp"
+        android:layout_marginBottom="-166dp"
+        android:text="testing now" />
 </RelativeLayout>

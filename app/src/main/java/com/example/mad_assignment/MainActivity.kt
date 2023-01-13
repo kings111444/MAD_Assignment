@@ -10,6 +10,7 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,7 @@ import com.example.mad_assignment.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
@@ -37,6 +39,10 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         appDb = AppDatabase.getDatabase(this)
+        var Date = findViewById<TextView>(R.id.tv_date)
+        Date.text = LocalDate.now().toString()
+
+
         binding.btnInsertData.setOnClickListener {
             writeData()
         }
@@ -51,40 +57,51 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
-        binding.btnInsertData.setOnClickListener{
-        }
-
-        binding.btnViewData.setOnClickListener {
-        }
     }
 
     private fun readData() {
-        val steps = binding.stepcurrent.text.toString()
-        lateinit var step : StepCount
+
+        lateinit var stepcount : StepCount
+        var step_text = binding.etStep.text
+        var date_text = binding.tvDate.text
+
         GlobalScope.launch {
-            step= appDb.stepcountDao().data(steps.toInt())
-            Log.d("Robin Data",step.toString())
-            binding.tvStep.text = step.stepcounted
+            Log.d("date?",date_text.toString())
+            stepcount = appDb.stepcountDao().findbydate(date_text.toString())
+            Log.d("Robin Data",stepcount.toString())
+            binding.tvShowrecord.text = stepcount.stepcounted
+
         }
+
 
     }
 
     private fun writeData(){
 
-        val firstName = binding.stepcurrent.text.toString()
+
+        var step_text = binding.etStep.text
+        var date_text = binding.tvDate.text
 
 
-        if(firstName.isNotEmpty() ) {
-            val student = StepCount(
-                null, firstName,
+
+        if(step_text.isNotEmpty()) {
+            lateinit var stepcount : StepCount
+            Log.d("step?", step_text.toString())
+            Log.d("date", date_text.toString())
+            stepcount = appDb.stepcountDao().findbydate(date_text as String)
+
+            val stepdata = StepCount(
+                null,step_text.toString(), date_text.toString()
             )
             GlobalScope.launch(Dispatchers.IO) {
-                appDb.stepcountDao().insert(student)
+
+                if(stepcount.toString() == (date_text.toString())){
+                    appDb.stepcountDao().update(step_text.toString(), date_text.toString())
+                }
+
+                appDb.stepcountDao().insert(stepdata)
             }
 
-            binding.stepcurrent.text.clear()
 
 
             Toast.makeText(this@MainActivity,"Successfully written",Toast.LENGTH_SHORT).show()
@@ -94,7 +111,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
 
     override fun onSensorChanged(event: SensorEvent?) {
-        var steptaken = findViewById<TextView>(R.id.stepcurrent)
+        var steptaken = findViewById<TextView>(R.id.etStep)
 
         if(event!!.sensor.type == Sensor.TYPE_ACCELEROMETER){ // For phone with accelermeter sensor
             val xaccel: Float = event.values[0]
