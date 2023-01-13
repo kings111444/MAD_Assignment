@@ -1,28 +1,30 @@
 package com.example.mad_assignment
 
 import android.Manifest
-import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.mad_assignment.DBHelper
-import java.lang.Math.sqrt
-import kotlin.properties.Delegates
+import com.example.mad_assignment.databinding.ActivityMainBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity(), SensorEventListener {
 
+    lateinit var binding: ActivityMainBinding
+    private lateinit var appDb: AppDatabase
     private var magnitudePreviousStep = 0.0
     private val previousTotalSteps = 0f
     private var totalSteps = 0f
@@ -32,17 +34,67 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        appDb = AppDatabase.getDatabase(this)
+        binding.btnInsertData.setOnClickListener {
+            writeData()
+        }
+
+        binding.btnViewData.setOnClickListener {
+            readData()
+        }
 
         if(isPermissionGranted()){
             requestPermission()
         }
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+
+        binding.btnInsertData.setOnClickListener{
+        }
+
+        binding.btnViewData.setOnClickListener {
+        }
     }
 
+    private fun readData() {
+        val steps = binding.stepcurrent.text.toString()
+        lateinit var step : StepCount
+        GlobalScope.launch {
+            step= appDb.stepcountDao().data(steps.toInt())
+            Log.d("Robin Data",step.toString())
+            binding.tvStep.text = step.stepcounted
+        }
+
+    }
+
+    private fun writeData(){
+
+        val firstName = binding.stepcurrent.text.toString()
+
+
+        if(firstName.isNotEmpty() ) {
+            val student = StepCount(
+                null, firstName,
+            )
+            GlobalScope.launch(Dispatchers.IO) {
+                appDb.stepcountDao().insert(student)
+            }
+
+            binding.stepcurrent.text.clear()
+
+
+            Toast.makeText(this@MainActivity,"Successfully written",Toast.LENGTH_SHORT).show()
+        }else Toast.makeText(this@MainActivity,"Please Enter Data",Toast.LENGTH_SHORT).show()
+
+    }
+
+
     override fun onSensorChanged(event: SensorEvent?) {
-        var steptaken = findViewById<TextView>(R.id.step_current)
+        var steptaken = findViewById<TextView>(R.id.stepcurrent)
 
         if(event!!.sensor.type == Sensor.TYPE_ACCELEROMETER){ // For phone with accelermeter sensor
             val xaccel: Float = event.values[0]
