@@ -18,3 +18,5 @@ interface StepCountDaoDao {
     fun update(step: String, data: String)
 
 }
+
+//from https://github.com/foxandroid/RoomDB

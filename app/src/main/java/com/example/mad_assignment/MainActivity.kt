@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
             Log.d("date?",date_text.toString())
             stepcount = appDb.stepcountDao().findbydate(date_text.toString())
             Log.d("Robin Data",stepcount.toString())
-            binding.tvShowrecord.text = stepcount.stepcounted
+            binding.tvShowrecord.text = "Last time update:" + stepcount.stepcounted
 
         }
 
@@ -193,4 +193,4 @@ class MainActivity : AppCompatActivity(), SensorEventListener {
     }
 }
 
-//From https://www.youtube.com/watch?v=sOGmivei73I
+//From https://www.youtube.com/watch?v=sOGmivei73I and https://github.com/foxandroid/RoomDB

@@ -10,3 +10,5 @@ data class StepCount(
     @ColumnInfo(name = "StepCounted") val stepcounted: String?,
     @ColumnInfo(name = "Date") val data: String?
 )
+
+//from https://github.com/foxandroid/RoomDB

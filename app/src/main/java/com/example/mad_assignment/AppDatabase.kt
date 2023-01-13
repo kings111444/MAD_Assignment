@@ -37,3 +37,5 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
 }
+
+//from https://github.com/foxandroid/RoomDB
